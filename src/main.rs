@@ -36,7 +36,7 @@ async fn main() {
                 let size = rand::gen_range(16.0, 64.0);
                 squares.push(Shape {
                     size,
-                    speed: rand::gen_range(50.0, 150.0),
+                    speed: rand::gen_range(200.0, 500.0),
                     x: rand::gen_range(size / 2.0, screen_width() - size / 2.0),
                     y: -size,
                 })
