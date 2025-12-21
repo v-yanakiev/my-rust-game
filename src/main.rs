@@ -60,7 +60,7 @@ async fn main() {
         if squares.iter().any(|square| circle.collides_with(square)) {
             gameover = true;
         }
-        if(gameover&&is_key_pressed(KeyCode::Space)){
+        if gameover&&is_key_pressed(KeyCode::Space) {
             squares.clear();
             circle.x=screen_width() / 2.0;
             circle.y=screen_height() / 2.0;
