@@ -59,12 +59,22 @@ async fn main() {
         }
         if squares.iter().any(|square| circle.collides_with(square)) {
             gameover = true;
+            let text = "Game over!";
+            let text_dimensions = measure_text(text, None, 50, 1.0);
+            draw_text(
+                text,
+                screen_width() / 2.0 - text_dimensions.width / 2.0,
+                screen_height() / 2.0,
+                50.0,
+                RED,
+            );
         }
-        if gameover&&is_key_pressed(KeyCode::Space) {
+
+        if gameover && is_key_pressed(KeyCode::Space) {
             squares.clear();
-            circle.x=screen_width() / 2.0;
-            circle.y=screen_height() / 2.0;
-            gameover=false;
+            circle.x = screen_width() / 2.0;
+            circle.y = screen_height() / 2.0;
+            gameover = false;
         }
         next_frame().await;
     }
