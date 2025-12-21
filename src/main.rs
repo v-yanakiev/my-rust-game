@@ -106,6 +106,7 @@ async fn main() {
 
         if gameover && is_key_pressed(KeyCode::Space) {
             squares.clear();
+            bullets.clear();
             circle.x = screen_width() / 2.0;
             circle.y = screen_height() / 2.0;
             gameover = false;
