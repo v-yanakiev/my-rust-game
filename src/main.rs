@@ -32,7 +32,7 @@ async fn main() {
             circle.x = clamp(circle.x, CIRCLE_RADIUS, screen_width() - CIRCLE_RADIUS);
             circle.y = clamp(circle.y, CIRCLE_RADIUS, screen_height() - CIRCLE_RADIUS);
 
-            if rand::gen_range(0, 99) >= 95 {
+            if rand::gen_range(0, 99) >= 85 {
                 let size = rand::gen_range(16.0, 64.0);
                 squares.push(Shape {
                     size,
