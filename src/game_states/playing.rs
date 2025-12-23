@@ -1,7 +1,12 @@
+use crate::{CIRCLE_RADIUS, GameState, MOVEMENT_SPEED, Shape};
 use macroquad::prelude::*;
-use crate::{MOVEMENT_SPEED, CIRCLE_RADIUS, Shape};
 
-pub fn playing_state(circle: &mut crate::Shape, squares: &mut Vec<crate::Shape>, bullets: &mut Vec<crate::Shape>) {
+pub fn playing_state(
+    circle: &mut crate::Shape,
+    squares: &mut Vec<crate::Shape>,
+    bullets: &mut Vec<crate::Shape>,
+    game_state:&mut GameState
+) {
     let delta_time = get_frame_time();
     if is_key_down(KeyCode::Right) {
         circle.x += MOVEMENT_SPEED * delta_time;
@@ -50,24 +55,17 @@ pub fn playing_state(circle: &mut crate::Shape, squares: &mut Vec<crate::Shape>,
     squares.retain(|square| !square.collided);
     bullets.retain(|bullet| !bullet.collided);
 
-    for square in squares.iter_mut(){
-        for bullet in bullets.iter_mut(){
-            if bullet.collides_with(square){
-                bullet.collided=true;
-                square.collided=true;
+    for square in squares.iter_mut() {
+        for bullet in bullets.iter_mut() {
+            if bullet.collides_with(square) {
+                bullet.collided = true;
+                square.collided = true;
             }
         }
     }
-    
+
     if squares.iter().any(|square| circle.collides_with(square)) {
-        let text = "Game over!";
-        let text_dimensions = measure_text(text, None, 50, 1.0);
-        draw_text(
-            text,
-            screen_width() / 2.0 - text_dimensions.width / 2.0,
-            screen_height() / 2.0,
-            50.0,
-            RED,
-        );
+        
+        *game_state= GameState::GameOver;
     }
 }

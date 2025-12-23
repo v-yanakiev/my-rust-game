@@ -14,7 +14,7 @@ enum GameState {
 async fn main() {
     let mut game_state: GameState = GameState::Playing;
     rand::srand(miniquad::date::now() as u64);
-    let mut squares = vec![];
+    let mut squares: Vec<Shape> = vec![];
     let mut circle = Shape {
         size: CIRCLE_RADIUS,
         speed: MOVEMENT_SPEED,
@@ -25,22 +25,6 @@ async fn main() {
     let mut bullets: Vec<Shape> = vec![];
 
     loop {
-        match game_state {
-            GameState::Playing => {
-                game_states::playing::playing_state(&mut circle, &mut squares, &mut bullets);
-            }
-            GameState::MainMenu => todo!(),
-            GameState::Paused => todo!(),
-            GameState::GameOver => {
-                if is_key_pressed(KeyCode::Space) {
-                    squares.clear();
-                    bullets.clear();
-                    circle.x = screen_width() / 2.0;
-                    circle.y = screen_height() / 2.0;
-                    game_state = GameState::Playing;
-                }
-            }
-        }
         
         draw_circle(circle.x, circle.y, CIRCLE_RADIUS, YELLOW);
 
@@ -57,6 +41,38 @@ async fn main() {
         for bullet in &bullets {
             draw_circle(bullet.x, bullet.y, bullet.size / 2.0, RED);
         }
+
+        match game_state {
+            GameState::Playing => {
+                game_states::playing::playing_state(
+                    &mut circle,
+                    &mut squares,
+                    &mut bullets,
+                    &mut game_state,
+                );
+            }
+            GameState::MainMenu => todo!(),
+            GameState::Paused => todo!(),
+            GameState::GameOver => {
+                let text = "Game over!";
+                let text_dimensions = measure_text(text, None, 50, 1.0);
+                draw_text(
+                    text,
+                    screen_width() / 2.0 - text_dimensions.width / 2.0,
+                    screen_height() / 2.0,
+                    50.0,
+                    RED,
+                );
+                if is_key_pressed(KeyCode::Space) {
+                    squares.clear();
+                    bullets.clear();
+                    circle.x = screen_width() / 2.0;
+                    circle.y = screen_height() / 2.0;
+                    game_state = GameState::Playing;
+                }
+            }
+        }
+
 
         next_frame().await;
     }
