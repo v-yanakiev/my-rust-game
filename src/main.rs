@@ -1,4 +1,6 @@
 use macroquad::prelude::*;
+
+use crate::game_states::game_over::game_over_state;
 mod game_states;
 
 const MOVEMENT_SPEED: f32 = 200.0;
@@ -25,7 +27,6 @@ async fn main() {
     let mut bullets: Vec<Shape> = vec![];
 
     loop {
-        
         draw_circle(circle.x, circle.y, CIRCLE_RADIUS, YELLOW);
 
         for square in &squares {
@@ -54,25 +55,9 @@ async fn main() {
             GameState::MainMenu => todo!(),
             GameState::Paused => todo!(),
             GameState::GameOver => {
-                let text = "Game over!";
-                let text_dimensions = measure_text(text, None, 50, 1.0);
-                draw_text(
-                    text,
-                    screen_width() / 2.0 - text_dimensions.width / 2.0,
-                    screen_height() / 2.0,
-                    50.0,
-                    RED,
-                );
-                if is_key_pressed(KeyCode::Space) {
-                    squares.clear();
-                    bullets.clear();
-                    circle.x = screen_width() / 2.0;
-                    circle.y = screen_height() / 2.0;
-                    game_state = GameState::Playing;
-                }
+                game_over_state(&mut circle, &mut squares, &mut bullets, &mut game_state)
             }
         }
-
 
         next_frame().await;
     }
