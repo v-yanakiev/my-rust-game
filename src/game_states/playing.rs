@@ -58,4 +58,16 @@ pub fn playing_state(circle: &mut crate::Shape, squares: &mut Vec<crate::Shape>,
             }
         }
     }
+    
+    if squares.iter().any(|square| circle.collides_with(square)) {
+        let text = "Game over!";
+        let text_dimensions = measure_text(text, None, 50, 1.0);
+        draw_text(
+            text,
+            screen_width() / 2.0 - text_dimensions.width / 2.0,
+            screen_height() / 2.0,
+            50.0,
+            RED,
+        );
+    }
 }
