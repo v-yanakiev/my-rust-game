@@ -3,14 +3,14 @@ use macroquad::prelude::*;
 use crate::game_states::game_over::game_over_state;
 mod game_states;
 
-const MOVEMENT_SPEED: f32 = 200.0;
-const CIRCLE_RADIUS: f32 = 16.0;
 enum GameState {
     MainMenu,
     Playing,
     Paused,
     GameOver,
 }
+const MOVEMENT_SPEED: f32 = 200.0;
+const CIRCLE_RADIUS: f32 = 16.0;
 
 #[macroquad::main("My game")]
 async fn main() {
@@ -27,22 +27,8 @@ async fn main() {
     let mut bullets: Vec<Shape> = vec![];
 
     loop {
-        draw_circle(circle.x, circle.y, CIRCLE_RADIUS, YELLOW);
-
-        for square in &squares {
-            draw_rectangle(
-                square.x - square.size / 2.0,
-                square.y - square.size / 2.0,
-                square.size,
-                square.size,
-                GREEN,
-            );
-        }
-
-        for bullet in &bullets {
-            draw_circle(bullet.x, bullet.y, bullet.size / 2.0, RED);
-        }
-
+        game_states::common::draw_common(&mut circle, &mut squares, &mut bullets);
+        
         match game_state {
             GameState::Playing => {
                 game_states::playing::playing_state(
