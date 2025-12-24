@@ -60,9 +60,10 @@ pub fn playing_state(
 
     for square in squares.iter_mut() {
         for bullet in bullets.iter_mut() {
-            if bullet.collides_with(square) {
+            if bullet.collides_with(square) && !bullet.collided && !square.collided {
                 bullet.collided = true;
                 square.collided = true;
+                game_state.increment_score(1);
             }
         }
     }
@@ -70,7 +71,7 @@ pub fn playing_state(
     if squares.iter().any(|square| circle.collides_with(square)) {
         game_state.to_game_over();
     }
-    if is_key_pressed(KeyCode::Space){
+    if is_key_pressed(KeyCode::Space) {
         game_state.pause();
     }
 }

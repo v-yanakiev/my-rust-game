@@ -16,24 +16,34 @@ impl GameState {
     }
 
     pub fn to_game_over(&mut self) {
-        let score= match self{
-            GameState::Playing(p)=>p.score,
-            _=>panic!("Tried to end the game while not playing!")
+        let score = match self {
+            GameState::Playing(p) => p.score,
+            _ => panic!("Tried to end the game while not playing!"),
         };
-        *self=GameState::GameOver(GameOverState { reached_score: score });
+        *self = GameState::GameOver(GameOverState {
+            reached_score: score,
+        });
     }
     pub fn pause(&mut self) {
-        let score= match self{
-            GameState::Playing(p)=>p.score,
-            _=>panic!("Tried to pause the game while not playing!")
+        let score = match self {
+            GameState::Playing(p) => p.score,
+            _ => panic!("Tried to pause the game while not playing!"),
         };
-        *self=GameState::Paused(PlayingState { score });
+        *self = GameState::Paused(PlayingState { score });
     }
-     pub fn unpause(&mut self) {
-        let score= match self{
-            GameState::Paused(p)=>p.score,
-            _=>panic!("Tried to unpause the game while not paused!")
+    pub fn unpause(&mut self) {
+        let score = match self {
+            GameState::Paused(p) => p.score,
+            _ => panic!("Tried to unpause the game while not paused!"),
         };
-        *self=GameState::Playing(PlayingState { score });
+        *self = GameState::Playing(PlayingState { score });
+    }
+    pub fn increment_score(&mut self, increment_amount:u32){
+        match self{
+            GameState::Playing(p)=>{
+                p.score+=increment_amount;
+            }
+            _ => panic!("Can't increment score from this state!")
+        };
     }
 }
