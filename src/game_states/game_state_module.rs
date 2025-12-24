@@ -38,12 +38,19 @@ impl GameState {
         };
         *self = GameState::Playing(PlayingState { score });
     }
-    pub fn increment_score(&mut self, increment_amount:u32){
-        match self{
-            GameState::Playing(p)=>{
-                p.score+=increment_amount;
+    pub fn increment_score(&mut self, increment_amount: u32) {
+        match self {
+            GameState::Playing(p) => {
+                p.score += increment_amount;
             }
-            _ => panic!("Can't increment score from this state!")
+            _ => panic!("Can't increment score from this state!"),
+        };
+    }
+    pub fn get_score(&self) -> u32 {
+        return match self {
+            GameState::Playing(p) | GameState::Paused(p) => p.score,
+            GameState::GameOver(p) =>p.reached_score,
+            _ => panic!("Can't get score from this state!"),
         };
     }
 }

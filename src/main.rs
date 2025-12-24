@@ -21,7 +21,7 @@ async fn main() {
     let mut bullets: Vec<Shape> = vec![];
 
     loop {
-        game_states::common::draw_common(&mut circle, &mut squares, &mut bullets);
+        game_states::common::draw_common(&mut circle, &mut squares, &mut bullets, &mut game_state);
         
         match game_state {
             GameState::Playing(_) => {
