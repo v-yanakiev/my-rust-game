@@ -1,23 +1,26 @@
-use crate::{CIRCLE_RADIUS, GameState, MOVEMENT_SPEED, Shape};
+use crate::{CIRCLE_RADIUS, MOVEMENT_SPEED, Shape, game_states::game_state_module::GameState};
 use macroquad::prelude::*;
 
+pub struct PlayingState {
+    pub score: u32,
+}
 pub fn playing_state(
     circle: &mut crate::Shape,
     squares: &mut Vec<crate::Shape>,
     bullets: &mut Vec<crate::Shape>,
-    game_state:&mut GameState
+    game_state: &mut GameState,
 ) {
     let delta_time = get_frame_time();
-    if is_key_down(KeyCode::Right) {
+    if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) {
         circle.x += MOVEMENT_SPEED * delta_time;
     }
-    if is_key_down(KeyCode::Left) {
+    if is_key_down(KeyCode::Left) || is_key_down(KeyCode::A) {
         circle.x -= MOVEMENT_SPEED * delta_time;
     }
-    if is_key_down(KeyCode::Up) {
+    if is_key_down(KeyCode::Up) || is_key_down(KeyCode::W) {
         circle.y -= MOVEMENT_SPEED * delta_time;
     }
-    if is_key_down(KeyCode::Down) {
+    if is_key_down(KeyCode::Down) || is_key_down(KeyCode::S) {
         circle.y += MOVEMENT_SPEED * delta_time;
     }
     circle.x = clamp(circle.x, CIRCLE_RADIUS, screen_width() - CIRCLE_RADIUS);
@@ -38,7 +41,7 @@ pub fn playing_state(
     }
     squares.retain(|square| square.y < screen_height() + square.size);
 
-    if is_key_pressed(KeyCode::Space) {
+    if is_key_pressed(KeyCode::Enter) {
         bullets.push(Shape {
             x: circle.x,
             y: circle.y,
@@ -65,7 +68,9 @@ pub fn playing_state(
     }
 
     if squares.iter().any(|square| circle.collides_with(square)) {
-        
-        *game_state= GameState::GameOver;
+        game_state.to_game_over();
+    }
+    if is_key_pressed(KeyCode::Space){
+        game_state.pause();
     }
 }
