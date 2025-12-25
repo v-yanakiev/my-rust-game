@@ -78,8 +78,8 @@ pub fn playing_state(
                 square.collided = true;
                 game_state.increment_score(1);
 
-                let random_number = rand::gen_range(0, 1);
-                if random_number == 0 {
+                let random_number = rand::gen_range(0, 10);
+                if random_number > 5 {
                     play_sound(
                         &sounds.explosion1,
                         PlaySoundParams {
