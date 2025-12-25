@@ -21,7 +21,8 @@ pub fn game_over_state(
         50.0,
         RED,
     );
-    if is_key_pressed(KeyCode::Space) {
+    // Restart with Space key or a single touch (Started)
+    if is_key_pressed(KeyCode::Space) || touches().iter().any(|t| t.phase == TouchPhase::Started) {
         squares.clear();
         bullets.clear();
         circle.x = screen_width() / 2.0;

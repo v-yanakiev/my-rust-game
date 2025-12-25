@@ -32,6 +32,19 @@ pub fn playing_state(
     circle.x = clamp(circle.x, CIRCLE_RADIUS, screen_width() - CIRCLE_RADIUS);
     circle.y = clamp(circle.y, CIRCLE_RADIUS, screen_height() - CIRCLE_RADIUS);
 
+    // Touch support: follow first active touch (for movement)
+    let all_touches = touches();
+    if !all_touches.is_empty() {
+        if let Some(t) = all_touches.iter().find(|t| matches!(t.phase, TouchPhase::Started | TouchPhase::Moved | TouchPhase::Stationary)) {
+            circle.x = clamp(t.position.x, CIRCLE_RADIUS, screen_width() - CIRCLE_RADIUS);
+            circle.y = clamp(t.position.y, CIRCLE_RADIUS, screen_height() - CIRCLE_RADIUS);
+        } else {
+            let p = all_touches[0].position;
+            circle.x = clamp(p.x, CIRCLE_RADIUS, screen_width() - CIRCLE_RADIUS);
+            circle.y = clamp(p.y, CIRCLE_RADIUS, screen_height() - CIRCLE_RADIUS);
+        }
+    }
+
     if rand::gen_range(0, 99) >= 85 {
         let size = rand::gen_range(16.0, 64.0);
         squares.push(Shape {
@@ -47,7 +60,8 @@ pub fn playing_state(
     }
     squares.retain(|square| square.y < screen_height() + square.size);
 
-    if is_key_pressed(KeyCode::Enter) {
+    // Fire with Enter or touch start
+    if is_key_pressed(KeyCode::Enter) || touches().iter().any(|t| t.phase == TouchPhase::Started) {
         bullets.push(Shape {
             x: circle.x,
             y: circle.y,
@@ -63,10 +77,16 @@ pub fn playing_state(
             },
         );
     }
+
     for bullet in bullets.iter_mut() {
         bullet.y -= bullet.speed * delta_time;
     }
     bullets.retain(|bullet| bullet.y > 0.0 - bullet.size / 2.0);
+
+    // Pause with two-finger tap
+    if touches().iter().filter(|t| t.phase == TouchPhase::Started).count() >= 2 {
+        game_state.pause();
+    }
 
     squares.retain(|square| !square.collided);
     bullets.retain(|bullet| !bullet.collided);
