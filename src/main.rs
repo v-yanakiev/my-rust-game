@@ -27,9 +27,9 @@ async fn main() {
     let mut bullets: Vec<Shape> = vec![];
 
     let sounds = Sounds {
-        explosion1: load_sound("assets\\sound\\explosion1.wav").await.unwrap(),
-        explosion2: load_sound("assets\\sound\\explosion2.wav").await.unwrap(),
-        laser1: load_sound("assets\\sound\\laser1.wav").await.unwrap(),
+        explosion1: load_sound("assets/sound/explosion1.wav").await.unwrap(),
+        explosion2: load_sound("assets/sound/explosion2.wav").await.unwrap(),
+        laser1: load_sound("assets/sound/laser1.wav").await.unwrap(),
     };
 
     loop {
