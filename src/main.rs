@@ -45,7 +45,6 @@ async fn main() {
                     &sounds
                 );
             }
-            GameState::MainMenu => todo!(),
             GameState::Paused(_) => {
                 pause_state_engage(&mut game_state);
             }
