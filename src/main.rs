@@ -1,6 +1,12 @@
-use macroquad::prelude::*;
+use macroquad::{
+    audio::{Sound, load_sound},
+    prelude::*,
+};
 
-use crate::game_states::{game_over::game_over_state, game_state_module::GameState, pause_state::pause_state_engage, playing::PlayingState};
+use crate::game_states::{
+    game_over::game_over_state, game_state_module::GameState, pause_state::pause_state_engage,
+    playing::PlayingState,
+};
 mod game_states;
 
 const MOVEMENT_SPEED: f32 = 200.0;
@@ -20,9 +26,15 @@ async fn main() {
     };
     let mut bullets: Vec<Shape> = vec![];
 
+    let sounds = Sounds {
+        explosion1: load_sound("assets\\sound\\explosion1.wav").await.unwrap(),
+        explosion2: load_sound("assets\\sound\\explosion2.wav").await.unwrap(),
+        laser1: load_sound("assets\\sound\\laser1.wav").await.unwrap(),
+    };
+
     loop {
         game_states::common::draw_common(&mut circle, &mut squares, &mut bullets, &mut game_state);
-        
+
         match game_state {
             GameState::Playing(_) => {
                 game_states::playing::playing_state(
@@ -30,12 +42,13 @@ async fn main() {
                     &mut squares,
                     &mut bullets,
                     &mut game_state,
+                    &sounds
                 );
             }
             GameState::MainMenu => todo!(),
             GameState::Paused(_) => {
                 pause_state_engage(&mut game_state);
-            },
+            }
             GameState::GameOver(_) => {
                 game_over_state(&mut circle, &mut squares, &mut bullets, &mut game_state)
             }
@@ -65,4 +78,10 @@ impl Shape {
             h: self.size,
         }
     }
+}
+
+struct Sounds {
+    explosion1: Sound,
+    explosion2: Sound,
+    laser1: Sound,
 }

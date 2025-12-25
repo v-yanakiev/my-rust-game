@@ -1,5 +1,10 @@
-use crate::{CIRCLE_RADIUS, MOVEMENT_SPEED, Shape, game_states::game_state_module::GameState};
-use macroquad::prelude::*;
+use crate::{
+    CIRCLE_RADIUS, MOVEMENT_SPEED, Shape, Sounds, game_states::game_state_module::GameState,
+};
+use macroquad::{
+    audio::{PlaySoundParams, play_sound},
+    prelude::*,
+};
 
 pub struct PlayingState {
     pub score: u32,
@@ -9,6 +14,7 @@ pub fn playing_state(
     squares: &mut Vec<crate::Shape>,
     bullets: &mut Vec<crate::Shape>,
     game_state: &mut GameState,
+    sounds: &Sounds,
 ) {
     let delta_time = get_frame_time();
     if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) {
@@ -48,7 +54,14 @@ pub fn playing_state(
             speed: circle.speed * 2.0,
             size: 5.0,
             collided: false,
-        })
+        });
+        play_sound(
+            &sounds.laser1,
+            PlaySoundParams {
+                looped: false,
+                volume: 1.0,
+            },
+        );
     }
     for bullet in bullets.iter_mut() {
         bullet.y -= bullet.speed * delta_time;
@@ -64,6 +77,25 @@ pub fn playing_state(
                 bullet.collided = true;
                 square.collided = true;
                 game_state.increment_score(1);
+
+                let random_number = rand::gen_range(0, 1);
+                if random_number == 0 {
+                    play_sound(
+                        &sounds.explosion1,
+                        PlaySoundParams {
+                            looped: false,
+                            volume: 1.0,
+                        },
+                    );
+                } else {
+                    play_sound(
+                        &sounds.explosion2,
+                        PlaySoundParams {
+                            looped: false,
+                            volume: 1.0,
+                        },
+                    );
+                }
             }
         }
     }
